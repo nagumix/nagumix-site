@@ -1,37 +1,30 @@
-sections: [hero, cards, cta]
+sections: [hero, cards]
 
 hero:
   align: center
-  eyebrow: Open-source project starter
+  eyebrow: Image collage application
   title_lines:
-    - words: [{ text: Your project. }]
-    - words: [{ text: Clearly documented. }]
-  lead: A ready-to-edit home for documentation, project updates, and long-form guides.
+    - words: [{ text: Arrange images. }]
+    - words: [{ text: Keep the view. }]
+  lead: NaguMIX is a native desktop application for arranging, cropping, saving, and exporting image collages.
   actions:
-    - { label: Read the docs, url: docs/, icon: fa-solid fa-book, style: primary }
-    - { label: Follow the tutorial, url: book/, icon: fa-solid fa-arrow-right, style: ghost }
+    - { label: Project status, url: docs/status/, icon: fa-solid fa-circle-info, style: primary }
+    - { label: About NaguMIX, url: docs/overview/, icon: fa-solid fa-image, style: ghost }
 
 cards:
-  eyebrow: Start with structure
-  title: Everything has a place
+  eyebrow: Documentation scaffold
+  title: What is available now
   columns: 3
   items:
-    - title: Blog
-      desc: Publish posts, design notes, and release announcements.
-      icon: fa-solid fa-pen-nib
-      url: blog/
-    - title: Docs
-      desc: Organize reference material as Introduction, Get Started, Tutorial, and Reference.
+    - title: Application
+      desc: A native wxPython canvas for still images and animated GIFs.
+      icon: fa-solid fa-display
+      url: docs/overview/
+    - title: Documentation
+      desc: The public user guide and project documentation will grow here.
       icon: fa-solid fa-book-open
       url: docs/
-    - title: Book
-      desc: Teach a complete workflow in a focused, sequential reading experience.
-      icon: fa-solid fa-graduation-cap
-      url: book/
-
-cta:
-  title: Make this starter yours.
-  text: Change the project name and URL, replace the sample copy, and publish.
-  label: Get started
-  url: docs/get-started/
-  style: primary
+    - title: Availability
+      desc: Downloads and public source links are not published yet.
+      icon: fa-solid fa-circle-info
+      url: docs/status/

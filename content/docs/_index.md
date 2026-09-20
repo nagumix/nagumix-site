@@ -1,6 +1,6 @@
 ---
-title: Docs
-description: Learn the project, install it, follow a tutorial, and look up exact behavior.
+title: Documentation
+description: Public information for NaguMIX users and contributors.
 type: docs
 icon: fa-solid fa-book
 sidebar_root_for: self
@@ -14,10 +14,9 @@ cascade:
   footer_style: slim
 ---
 
-The documentation follows four familiar paths: understand the project, get it running, learn by doing, then consult the reference.
+This is the initial documentation scaffold. It contains only facts that can be
+stated before the public repositories, downloads, and hosted site exist.
 
-- [Introduction](/docs/introduction/)
-- [Get Started](/docs/get-started/)
-- [Tutorial](/docs/tutorial/)
-- [Reference](/docs/reference/)
+- [About NaguMIX](overview/)
+- [Publication status](status/)
 {.cards}

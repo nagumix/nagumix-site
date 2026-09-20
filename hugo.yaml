@@ -1,10 +1,8 @@
-# OINK Starter — the only site configuration file.
-# Change the two marked values first; everything else builds as-is.
-
-title: &siteTitle Project Name # CHANGE ME: one shared title for every language
-baseURL: https://example.org/ # CHANGE ME: canonical production URL
+title: &siteTitle NaguMIX
+baseURL: https://example.invalid/
 defaultContentLanguage: en
-enableGitInfo: true
+disableLanguages: [zh, fr]
+enableGitInfo: false
 enableRobotsTXT: true
 enableEmoji: true
 timeZone: UTC
@@ -16,7 +14,7 @@ languages:
     weight: 1
     title: *siteTitle
     params:
-      description: Documentation, updates, and guides for your project.
+      description: Project information and documentation for NaguMIX.
   zh:
     label: 简体中文
     locale: zh-CN
@@ -24,16 +22,15 @@ languages:
     title: *siteTitle
     hasCJKLanguage: true
     params:
-      description: 你的项目文档、动态与指南。
+      description: NaguMIX project documentation.
   fr:
     label: Français
     locale: fr-FR
     weight: 3
     title: *siteTitle
     params:
-      description: Documentation, actualités et guides de votre projet.
+      description: NaguMIX project documentation.
 
-# OINK's Markdown components depend on these three Goldmark settings.
 markup:
   goldmark:
     renderer:
@@ -53,53 +50,17 @@ outputs:
 params:
   offline_search: true
   copyright:
-    authors: Project contributors
-    from_year: 2026
+    authors: Vangual
+    from_year: 2025
+    to_year: 2026
   footer_center_info: ''
   ui:
     dark_mode: true
     section_index: cards
-    blog_index: cards
     sidebar_menu_foldable: true
     sidebar_icon_policy: groups
     backlinks: true
-    # theme_color: '#245f94'
-    # typography: system
-    # image_zoom: true
-    # share: [mastodon, linkedin, email, copy]
-    # feedback:
-    #   enable: true
-    #   reasons: true
-
-  # Optional repository links. Uncomment after creating your own repository.
-  # github_repo: https://github.com/OWNER/REPOSITORY
-  # github_branch: main
-
-  # Optional brand assets. The starter already supplies a neutral logo.
-  # logo: icons/logo.svg
-  # wordmark: icons/wordmark.svg
-
-  # Optional Giscus comments. Nothing is loaded until the entire block is set.
-  # comments:
-  #   enable: true
-  #   type: giscus
-  #   giscus:
-  #     repo: OWNER/REPOSITORY
-  #     repoId: R_xxxxxxxxxx
-  #     category: Announcements
-  #     categoryId: DIC_xxxxxxxxxx
-  #     mapping: pathname
-  #     inputPosition: bottom
-  #     theme: auto
-  #     loading: lazy
-
-  # Optional layout choice. Theme defaults remain active while commented.
-  # page_width: wide
-
-# Optional Google Analytics. Production builds only; previews stay untracked.
-# services:
-#   googleAnalytics:
-#     id: G-XXXXXXXXXX
+    typography: system
 
 module:
   imports:

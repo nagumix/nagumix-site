@@ -1,4 +1,4 @@
-module github.com/pgsty/oink-starter
+module nagumix-site
 
 go 1.27.0
 

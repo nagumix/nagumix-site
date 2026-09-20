@@ -1,4 +1,4 @@
 ---
-title: Project Name
-description: Documentation, updates, and a practical guide for your project.
+title: NaguMIX
+description: Project information and documentation for the NaguMIX image collage application.
 ---
