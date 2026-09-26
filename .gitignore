@@ -1,5 +1,13 @@
 /public/
 /resources/
+/.go/
+/.tools/
+/build/
+/reports/
+/go.tar.gz
+/hugo.tar.gz
+/checker-tests.txt
+__pycache__/
 /.hugo_cache/
 /.hugo_build.lock
 .DS_Store

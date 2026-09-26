@@ -13,8 +13,9 @@ workflows are deferred until destination URLs and hosting are approved.
 Requirements:
 
 - Git
-- Go 1.27 or newer
-- Hugo Extended 0.165.0 or newer
+- Go 1.27.0
+- Hugo Extended 0.166.0
+- Python 3.12 or newer (for rendered-link checks)
 
 Preview locally:
 
@@ -28,6 +29,40 @@ Run the warning-strict production build:
 hugo --cleanDestinationDir --gc --minify --environment production \
   --printPathWarnings --panicOnWarning
 ```
+
+Run the same validation as the CI definition, using separate destinations for
+the root and reserved-domain subpath forms:
+
+```console
+GOTOOLCHAIN=local go mod download
+GOTOOLCHAIN=local go mod verify
+hugo mod tidy --environment production
+git diff --exit-code -- go.mod go.sum
+python -m unittest discover -s tests -v
+hugo --cleanDestinationDir --gc --minify --environment production \
+  --printPathWarnings --panicOnWarning --destination build/root
+python scripts/check_rendered_links.py build/root --base-url https://example.invalid/
+hugo --cleanDestinationDir --gc --minify --environment production \
+  --printPathWarnings --panicOnWarning --baseURL https://example.invalid/nagumix-check/ \
+  --destination build/subpath
+python scripts/check_rendered_links.py build/subpath --base-url https://example.invalid/nagumix-check/
+```
+
+The checker follows local `href`, `src`, `poster`, and meta-refresh targets,
+requires target files, and verifies HTML fragment IDs and named anchors. It
+does not fetch external origins; `mailto:`, `tel:`, `data:`, `javascript:`, and
+other non-HTTP schemes are intentionally ignored. The GitLab configuration
+creates validation pipelines for branch pushes without an open merge request,
+merge requests, and default-branch pushes after integration. It intentionally
+excludes tags, schedules, API-triggered, and other pipeline sources.
+
+| Pipeline source/context | Result |
+| --- | --- |
+| Branch push with no open merge request | validation pipeline |
+| Merge request event | validation pipeline |
+| Branch push with an open merge request | suppressed to avoid a duplicate MR pipeline |
+| Default-branch push after integration | validation pipeline |
+| Tag, schedule, API, trigger, web, or other source | no pipeline |
 
 `baseURL` currently uses the reserved `example.invalid` domain. Replace it only
 when the real public location is approved.

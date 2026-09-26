@@ -1,0 +1,100 @@
+stages:
+  - validate
+
+workflow:
+  rules:
+    # Merge requests always receive a validation pipeline.
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    # Once an MR is open, its MR pipeline replaces duplicate branch-push runs.
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    # Branch pushes, including the default branch after integration, are covered.
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH'
+    # Tags, schedules, API, trigger, web, and all other sources are intentionally excluded.
+    - when: never
+
+default:
+  image: ubuntu@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
+  interruptible: true
+  timeout: 10m
+
+variables:
+  GOTOOLCHAIN: local
+  GOPATH: $CI_PROJECT_DIR/.go
+  GOMODCACHE: $CI_PROJECT_DIR/.go/pkg/mod
+  HUGO_CACHEDIR: $CI_PROJECT_DIR/.hugo_cache
+  GO_VERSION: 1.27.0
+  HUGO_VERSION: 0.166.0
+  GO_LINUX_AMD64_SHA256: 675c26c449cbb18fc24b74650de1eabbae6e16f64326fd85a283fb3b58280685
+  HUGO_LINUX_AMD64_SHA256: 0e39b901e3f919f1daae05c8ff64f0c14c8a348ef46886d63f8e6d1bb2653885
+
+cache:
+  key:
+    files:
+      - go.sum
+    prefix: site-go-modules
+  paths:
+    - .go/pkg/mod/
+
+checker-tests:
+  stage: validate
+  before_script:
+    - apt-get update -qq
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends python3
+  script:
+    - set -o pipefail
+    - python3 -m unittest discover -s tests -v | tee checker-tests.txt
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - checker-tests.txt
+
+site-validation:
+  stage: validate
+  before_script:
+    - set -o pipefail
+    - apt-get update -qq
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends ca-certificates curl git python3 tar
+    - mkdir -p .tools/hugo
+    - curl --fail --location --retry 3 --output go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+    - echo "${GO_LINUX_AMD64_SHA256}  go.tar.gz" | sha256sum --check --strict
+    - tar -C .tools -xzf go.tar.gz
+    - curl --fail --location --retry 3 --output hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+    - echo "${HUGO_LINUX_AMD64_SHA256}  hugo.tar.gz" | sha256sum --check --strict
+    - tar -C .tools/hugo -xzf hugo.tar.gz
+    - export PATH="$CI_PROJECT_DIR/.tools/go/bin:$CI_PROJECT_DIR/.tools/hugo:$PATH"
+    - go version
+    - hugo version
+    - hugo version | grep --fixed-strings '+extended'
+    - go env GOTOOLCHAIN
+    - go mod download
+    - go mod verify
+    - hugo mod tidy --environment production
+    - git diff --exit-code -- go.mod go.sum
+    - go list -m -f '{{.Path}} {{.Version}}' github.com/pgsty/oink
+  script:
+    - set -o pipefail
+    - export PATH="$CI_PROJECT_DIR/.tools/go/bin:$CI_PROJECT_DIR/.tools/hugo:$PATH"
+    - mkdir -p reports build/root build/subpath
+    - hugo --cleanDestinationDir --gc --minify --environment production --printPathWarnings --panicOnWarning --destination build/root 2>&1 | tee reports/root-build.txt
+    - python3 scripts/check_rendered_links.py build/root --base-url https://example.invalid/ 2>&1 | tee reports/root-links.txt
+    - hugo --cleanDestinationDir --gc --minify --environment production --printPathWarnings --panicOnWarning --baseURL https://example.invalid/nagumix-check/ --destination build/subpath 2>&1 | tee reports/subpath-build.txt
+    - python3 scripts/check_rendered_links.py build/subpath --base-url https://example.invalid/nagumix-check/ 2>&1 | tee reports/subpath-links.txt
+    - test -f build/root/index.html
+    - test -f build/root/docs/index.html
+    - test -f build/root/docs/overview/index.html
+    - test -f build/root/docs/status/index.html
+    - test -f build/root/llms.txt
+    - test -f build/root/_print/docs/index.html
+    - test -n "$(find build/root -maxdepth 1 -type f -name 'offline-search-index.en.*.json' -print -quit)"
+    - test ! -e build/root/fr
+    - test ! -e build/root/zh
+    - test ! -e build/subpath/fr
+    - test ! -e build/subpath/zh
+    - git diff --exit-code -- go.mod go.sum
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - reports/
