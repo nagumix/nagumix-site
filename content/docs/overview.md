@@ -1,14 +1,19 @@
 ---
-title: About NaguMIX
-description: What the application does.
+title: Overview
+description: A desktop canvas for image collages and visual references.
 weight: 10
 ---
 
-NaguMIX is a native desktop application for arranging images on a canvas. It
-supports direct file drops, independent image movement and zoom, viewport
-cropping, neighboring-file navigation, animated GIF playback and seeking,
-saved canvas state, and export to common still-image formats.
+NaguMIX brings images together on a canvas. Use it to compare photographs,
+assemble visual references or compose a collage from still images and GIF frames.
 
-The application is under active development. Packaging instructions, supported
-release platforms, and downloadable artifacts will be documented only after
-they have been produced and verified.
+Each image has its own position, zoom and visible frame. Cropping changes the
+view on the canvas, leaving the original image file intact. You can browse nearby
+files without repeatedly opening a file dialog, or choose a frame from an animated GIF.
+
+Save a canvas state when you want to return to the layout. Export a still image
+when you want a finished composition to share. A saved state refers to the
+original files, so keep those files available.
+
+NaguMIX is under active development. [Availability]({{< relref "status.md" >}}) explains what
+you can use today; [Getting Started]({{< relref "getting-started.md" >}}) walks through your first canvas.

@@ -1,6 +1,6 @@
 ---
-title: Documentation
-description: Public information for NaguMIX users and contributors.
+title: Guide
+description: Start a composition, learn the controls and find availability information.
 type: docs
 icon: fa-solid fa-book
 sidebar_root_for: self
@@ -14,9 +14,11 @@ cascade:
   footer_style: slim
 ---
 
-This is the initial documentation scaffold. It contains only facts that can be
-stated before the public repositories, downloads, and hosted site exist.
+Bring images together on a desktop canvas, adjust the view, and export a collage.
+Start with the basics or jump straight to the controls.
 
-- [About NaguMIX](overview/)
-- [Publication status](status/)
+- [Overview]({{< relref "overview.md" >}})
+- [Getting Started]({{< relref "getting-started.md" >}})
+- [Controls & Workflow]({{< relref "workflow.md" >}})
+- [Availability]({{< relref "status.md" >}})
 {.cards}

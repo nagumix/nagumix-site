@@ -1,30 +1,75 @@
-sections: [hero, cards]
+sections: [hero, cards, steps, faq]
 
 hero:
-  align: center
-  eyebrow: Image collage application
+  class: nagumix-hero
+  align: start
+  eyebrow: A canvas for your images
   title_lines:
-    - words: [{ text: Arrange images. }]
-    - words: [{ text: Keep the view. }]
-  lead: NaguMIX is a native desktop application for arranging, cropping, saving, and exporting image collages.
+    - Mix things up.
+    - See what comes together.
+  title_size: 3.8rem
+  lead: Bring photographs, references and favorite animations together. NaguMIX is a desktop image-collage app for exploring layouts and exporting the view you want to keep.
+  image:
+    src: images/nagumix-hero.webp
+    alt: NaguMIX lettering surrounded by miniature framed landscapes and colorful blocks.
+  media:
+    max_width: 480px
   actions:
-    - { label: Project status, url: docs/status/, icon: fa-solid fa-circle-info, style: primary }
-    - { label: About NaguMIX, url: docs/overview/, icon: fa-solid fa-image, style: ghost }
+    - { label: Get started, url: docs/getting-started/, icon: fa-solid fa-arrow-right, style: primary }
+    - { label: View source, url: 'https://github.com/nagumix/nagumix', icon: fa-brands fa-github, style: ghost }
+  detail: { label: Packaged downloads are not yet available, url: docs/status/ }
 
 cards:
-  eyebrow: Documentation scaffold
-  title: What is available now
+  eyebrow: From a few images to one composition
+  title: Make room for the details
   columns: 3
+  link_label: Explore the workflow
   items:
-    - title: Application
-      desc: A native wxPython canvas for still images and animated GIFs.
-      icon: fa-solid fa-display
-      url: docs/overview/
-    - title: Documentation
-      desc: The public user guide and project documentation will grow here.
-      icon: fa-solid fa-book-open
-      url: docs/
-    - title: Availability
-      desc: Downloads and public source links are not published yet.
-      icon: fa-solid fa-circle-info
+    - title: Arrange and reframe
+      desc: Add images to the canvas, move them into place, and resize their viewports. Reposition a cropped image beneath its frame without changing the original file.
+      icon: fa-solid fa-crop-simple
+      url: docs/workflow/#arrange-and-reframe
+    - title: Explore the alternatives
+      desc: Browse neighboring files with the mouse wheel. Pause a GIF, step through its frames and choose the moment that fits your composition.
+      icon: fa-solid fa-film
+      url: docs/workflow/#browse-and-choose-a-frame
+    - title: Keep it or share it
+      desc: Save the canvas state to revisit a layout, or export a still image as PNG, JPEG, WebP or BMP.
+      icon: fa-solid fa-image
+      url: docs/workflow/#save-or-export
+
+steps:
+  eyebrow: A simple starting point
+  title: Add. Arrange. Export.
+  items:
+    - title: Bring your images
+      desc: Drop files anywhere on the canvas, or right-click and choose Add Images... to select one or more images.
+    - title: Shape the view
+      desc: Select and move images. Zoom or adjust their frames until the composition feels right.
+    - title: Save your result
+      desc: Use the context menu to save an editable canvas state or export a finished still image.
+
+faq:
+  title: Frequently asked questions
+  style: flat
+  items:
+    - question: Is NaguMIX available to download?
+      answer: Packaged downloads are not yet available. The application source is public; the getting-started guide explains how to run it with Python and uv.
       url: docs/status/
+      link_label: Check availability
+    - question: Does arranging or cropping change my source images?
+      answer: No. Moving, zooming and reframing change only the canvas view. NaguMIX reads the source files without rewriting them.
+      url: docs/workflow/#arrange-and-reframe
+      link_label: Learn about arranging
+    - question: What is the difference between saving and exporting?
+      answer: A saved canvas state is an editable JSON layout that still refers to your source files. An export is a finished still image of the canvas.
+      url: docs/workflow/#save-or-export
+      link_label: Compare the workflows
+    - question: Can I choose a frame from an animated GIF?
+      answer: Yes. GIFs start paused; select one to play, pause, step through frames or seek with its hover controls. The displayed frame is used when you save the layout or export the canvas.
+      url: docs/workflow/#browse-and-choose-a-frame
+      link_label: See GIF controls
+    - question: Why will a saved layout not reopen?
+      answer: Saved layouts do not contain copies of the images. If a referenced file was moved, removed, changed incompatibly or can no longer be decoded, restore the expected source file and try again; the existing canvas is kept when loading fails.
+      url: docs/getting-started/#troubleshooting
+      link_label: Troubleshoot loading

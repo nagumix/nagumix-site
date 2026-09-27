@@ -1,12 +1,17 @@
 # NaguMIX site
 
-This is the pre-publication scaffold for the future NaguMIX project site and
-user documentation. It starts from the official OINK Starter and imports the
-OINK Hugo Module at the version pinned in `go.mod`.
+The NaguMIX site contains a product landing page, getting-started guide,
+controls reference, availability information and a small FAQ. It uses the
+official OINK Starter and the OINK Hugo Module pinned in `go.mod`.
 
-The scaffold is intentionally small. It does not claim that downloads, releases,
-source repositories, support channels, or a hosted site exist. Deployment
-workflows are deferred until destination URLs and hosting are approved.
+Application source is available at https://github.com/nagumix/nagumix.
+Packaged downloads are not yet available.
+
+Home sections are configured in `data/home/en.yaml`; guide pages live under
+`content/docs/`. The hero uses `static/images/nagumix-hero.webp`, a 960-pixel
+transparent derivative. A small project SCSS extension keeps the artwork within
+its square and lets the headline wrap on narrow screens. Branding terms are in
+`NOTICE.md`.
 
 ## Local build
 
@@ -52,20 +57,32 @@ The checker follows local `href`, `src`, `poster`, and meta-refresh targets,
 requires target files, and verifies HTML fragment IDs and named anchors. It
 does not fetch external origins; `mailto:`, `tel:`, `data:`, `javascript:`, and
 other non-HTTP schemes are intentionally ignored. The GitLab configuration
-creates validation pipelines for branch pushes without an open merge request,
-merge requests, and default-branch pushes after integration. It intentionally
-excludes tags, schedules, API-triggered, and other pipeline sources.
+creates validation pipelines and publishes one complete Pages snapshot. The
+stable `main` branch occupies the Pages root. Every current branch is also built
+at a deterministic path below `branches/`; a branch name is mapped to a readable
+slug plus a digest of its complete ref name. The `branches/` output path is
+therefore reserved for previews.
+
+The publisher serializes updates, refreshes all branch tips after it starts, and
+builds those exact commits as one artifact. A failed build leaves the previous
+successful Pages deployment in place. A deleted branch disappears from the next
+successful complete snapshot; the publisher never deletes repository branches.
+Merge-request pipelines can publish only for branches in this project. Fork
+merge requests remain validation-only and cannot run the Pages publisher.
+Tags, schedules, API-triggered, and other pipeline sources are excluded.
 
 | Pipeline source/context | Result |
 | --- | --- |
-| Branch push with no open merge request | validation pipeline |
-| Merge request event | validation pipeline |
-| Branch push with an open merge request | suppressed to avoid a duplicate MR pipeline |
-| Default-branch push after integration | validation pipeline |
+| Branch push with no open merge request | validation and one aggregate Pages publisher |
+| Same-project merge request event | validation and one aggregate Pages publisher |
+| Branch push with an open merge request | branch pipeline suppressed; the MR pipeline refreshes Pages |
+| Fork merge request event | validation only |
+| Default-branch push after integration | validation and one aggregate Pages publisher |
 | Tag, schedule, API, trigger, web, or other source | no pipeline |
 
-`baseURL` currently uses the reserved `example.invalid` domain. Replace it only
-when the real public location is approved.
+`baseURL` remains the safe local default `example.invalid`. CI overrides it for
+each build with that output's effective Pages URL; reserved-domain validation
+output is never deployed.
 
 ## Languages
 

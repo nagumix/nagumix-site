@@ -1,0 +1,6 @@
+// Keep the complete artwork inside its reserved square and allow narrow titles.
+.nagumix-hero {
+  .td-landing-hero__title > span { white-space: normal; }
+  .td-landing-hero__media { transform: none; }
+  .td-landing-hero__detail a { color: var(--bs-secondary-color); }
+}
