@@ -5,7 +5,9 @@ controls reference, availability information and a small FAQ. It uses the
 official OINK Starter and the OINK Hugo Module pinned in `go.mod`.
 
 Application source is available at https://github.com/nagumix/nagumix.
-Packaged downloads are not yet available.
+[NaguMIX 0.5.0](https://github.com/nagumix/nagumix/releases/tag/v0.5.0) provides
+unsigned Windows x64 setup, portable ZIP and MSI downloads. Installation and
+runtime requirements are covered by the site guides; source setup remains available.
 
 Home sections are configured in `data/home/en.yaml`; guide pages live under
 `content/docs/`. The hero uses `static/images/nagumix-hero.webp`, a 960-pixel
@@ -56,10 +58,17 @@ python scripts/check_rendered_links.py build/subpath --base-url https://example.
 The checker follows local `href`, `src`, `poster`, and meta-refresh targets,
 requires target files, and verifies HTML fragment IDs and named anchors. It
 does not fetch external origins; `mailto:`, `tel:`, `data:`, `javascript:`, and
-other non-HTTP schemes are intentionally ignored. The GitLab configuration
-creates validation pipelines and publishes one complete Pages snapshot. The
-stable `main` branch occupies the Pages root. Every current branch is also built
-at a deterministic path below `branches/`; a branch name is mapped to a readable
+other non-HTTP schemes are intentionally ignored.
+
+The GitHub Actions site build checks the same production module graph, root and
+subpath output, and rendered links on main pushes and pull requests. Successful
+runs retain separate root and subpath build artifacts plus concise check reports
+for seven days. These artifacts do not publish the site.
+
+The GitLab configuration creates validation pipelines and publishes one
+complete Pages snapshot. The stable `main` branch occupies the Pages root.
+Every current branch is also built at a deterministic path below `branches/`;
+a branch name is mapped to a readable
 slug plus a digest of its complete ref name. The `branches/` output path is
 therefore reserved for previews.
 

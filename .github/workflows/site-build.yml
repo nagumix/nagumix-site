@@ -1,0 +1,109 @@
+name: Site build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GOTOOLCHAIN: local
+      GOPATH: ${{ github.workspace }}/.go
+      GOMODCACHE: ${{ github.workspace }}/.go/pkg/mod
+      HUGO_CACHEDIR: ${{ github.workspace }}/.hugo_cache
+      GO_VERSION: 1.27.0
+      HUGO_VERSION: 0.166.0
+      GO_LINUX_AMD64_SHA256: 675c26c449cbb18fc24b74650de1eabbae6e16f64326fd85a283fb3b58280685
+      HUGO_LINUX_AMD64_SHA256: 0e39b901e3f919f1daae05c8ff64f0c14c8a348ef46886d63f8e6d1bb2653885
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Install verified Go and Hugo Extended
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/site-tools/hugo"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/go.tar.gz" "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+          echo "${GO_LINUX_AMD64_SHA256}  $RUNNER_TEMP/go.tar.gz" | sha256sum --check --strict
+          tar -C "$RUNNER_TEMP/site-tools" -xzf "$RUNNER_TEMP/go.tar.gz"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/hugo.tar.gz" "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          echo "${HUGO_LINUX_AMD64_SHA256}  $RUNNER_TEMP/hugo.tar.gz" | sha256sum --check --strict
+          tar -C "$RUNNER_TEMP/site-tools/hugo" -xzf "$RUNNER_TEMP/hugo.tar.gz"
+          echo "$RUNNER_TEMP/site-tools/go/bin" >> "$GITHUB_PATH"
+          echo "$RUNNER_TEMP/site-tools/hugo" >> "$GITHUB_PATH"
+
+      - name: Verify toolchain and Hugo module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          go version
+          hugo version | tee /tmp/site-hugo-version.txt
+          grep --fixed-strings '+extended' /tmp/site-hugo-version.txt
+          go mod download
+          go mod verify
+          hugo mod tidy --environment production
+          git diff --exit-code -- go.mod go.sum
+          go list -m -f '{{.Path}} {{.Version}}' github.com/pgsty/oink
+
+      - name: Build root and subpath sites and check rendered links
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports build/root build/subpath
+          hugo --cleanDestinationDir --gc --minify --environment production --printPathWarnings --panicOnWarning --destination build/root 2>&1 | tee reports/root-build.txt
+          python3 scripts/check_rendered_links.py build/root --base-url https://example.invalid/ 2>&1 | tee reports/root-links.txt
+          hugo --cleanDestinationDir --gc --minify --environment production --printPathWarnings --panicOnWarning --baseURL https://example.invalid/nagumix-check/ --destination build/subpath 2>&1 | tee reports/subpath-build.txt
+          python3 scripts/check_rendered_links.py build/subpath --base-url https://example.invalid/nagumix-check/ 2>&1 | tee reports/subpath-links.txt
+          test -f build/root/index.html
+          test -f build/root/docs/index.html
+          test -f build/root/docs/overview/index.html
+          test -f build/root/docs/status/index.html
+          test -f build/root/llms.txt
+          test -f build/root/_print/docs/index.html
+          test -n "$(find build/root -maxdepth 1 -type f -name 'offline-search-index.en.*.json' -print -quit)"
+          test ! -e build/root/fr
+          test ! -e build/root/zh
+          test ! -e build/subpath/fr
+          test ! -e build/subpath/zh
+          git diff --exit-code -- go.mod go.sum
+
+      - name: Upload root site
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: site-root
+          path: build/root/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload subpath site
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: site-subpath
+          path: build/subpath/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload build and link reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: site-validation-reports
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 7

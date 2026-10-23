@@ -10,7 +10,9 @@ Drop still images or GIF files anywhere on the canvas, or right-click and choose
 **Add Images...** to select one or more files. With the canvas focused, the
 default shortcut is **Ctrl + O** on Windows/Linux or **Command + O** on macOS.
 You can add files to an empty canvas or an existing composition.
-PNG, JPEG, AVIF and HEIC/HEIF are among the supported input formats.
+PNG, JPEG, AVIF and GIF are supported. The default Windows package does not
+include a HEIC/HEIF decoder; Microsoft Store codecs do not enable the optional
+Pillow decoder path available in independently configured source environments.
 
 Click an image to select it and drag to move it. White handles resize its visible
 frame while keeping the image scale fixed. When a smaller frame hides part of the
@@ -20,6 +22,10 @@ These edits do not modify the original file.
 Use **+**, **−** or **Ctrl + vertical mouse wheel** to zoom the selected image.
 An explicit zoom restores the full frame first. The context menu also offers
 duplicate, delete, reset, mark-and-swap and whole-canvas arrangement commands.
+
+With the canvas focused, **Delete** removes the selected image. With no selection,
+it does nothing. Original files remain unchanged; text fields retain normal Delete
+behavior. Shortcuts are fixed defaults; there is no shortcut-remapping settings UI.
 
 ## Browse and choose a frame
 
@@ -48,6 +54,7 @@ Saving and export replace the destination only after successful completion.
 | --- | --- |
 | Esc or X on the canvas | Exit |
 | Ctrl + O on Windows/Linux; Command + O on macOS (canvas focused) | Add Images... (default shortcut) |
+| Delete on the canvas | Remove selected image; no selection does nothing |
 | + / − | Zoom selected image |
 | Ctrl + vertical wheel | Zoom selected image |
 | Vertical wheel | Navigate files when enabled |

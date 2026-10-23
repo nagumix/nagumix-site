@@ -1,19 +1,45 @@
 ---
 title: Getting Started
-description: Run NaguMIX from source and create your first composition.
+description: Install NaguMIX on Windows or run from source, then create your first composition.
 weight: 20
 ---
 
+## Install on Windows x64
+
+[Download NaguMIX 0.5.0 setup](https://github.com/nagumix/nagumix/releases/download/v0.5.0/NaguMIX-0.5.0-windows-x64-setup.exe)
+and run it for a per-user installation. The application and installers are
+unsigned; Windows may show an unrecognized-app warning. You do not need Python.
+The desktop shortcut is off by default.
+
+Microsoft Visual C++ v14 Redistributable **x64 14.51.36247.0 or newer** is required.
+Setup defaults to no elevation (`NoElevate=1`). If the runtime is missing or too
+old, setup stops with guidance; ask an administrator to install the signed x64
+runtime from Microsoft, then retry.
+
+To explicitly permit setup's separate Microsoft runtime download and interactive
+license/UAC prompts, run this from the download directory in PowerShell:
+
+```powershell
+.\NaguMIX-0.5.0-windows-x64-setup.exe NoElevate=0
+```
+
+NaguMIX still installs for the current user. See the
+[versioned installation details](https://github.com/nagumix/nagumix/blob/v0.5.0/docs/WINDOWS_PACKAGING.md#optional-native-windows-installer).
+Ordinary uninstall retains settings, images and the shared runtime.
+
+For portable use, [download the ZIP](https://github.com/nagumix/nagumix/releases/download/v0.5.0/NaguMIX-0.5.0-windows-x64.zip),
+extract the complete folder and run `NaguMIX.exe`, keeping all files together.
+The same runtime is required. The [MSI and checksums]({{< relref "status.md" >}})
+are also available; use the MSI only when the runtime is already present.
+
 ## Run from source
 
-Packaged downloads are not yet available. Source setup requires Git, Python 3.12,
-[uv](https://docs.astral.sh/uv/) and the native runtime prerequisites for wxPython
-on your operating system. Check the
-[application README](https://github.com/nagumix/nagumix#development-setup)
-for current requirements.
+Source setup requires Git, Python 3.12, [uv](https://docs.astral.sh/uv/) and the
+native runtime prerequisites for wxPython on your operating system. Follow the
+[v0.5.0 application README](https://github.com/nagumix/nagumix/blob/v0.5.0/README.md#development-setup).
 
 ```console
-git clone https://github.com/nagumix/nagumix.git
+git clone --branch v0.5.0 --depth 1 https://github.com/nagumix/nagumix.git
 cd nagumix
 uv sync --locked
 uv run python main.py
@@ -67,6 +93,9 @@ viewer. A damaged file, an unsupported encoding inside a familiar extension or
 a source that changed while it was being read may not decode. NaguMIX does not
 repair source files.
 
+The default Windows package has no HEIC/HEIF decoder. Installing Microsoft Store
+codecs does not enable the optional Pillow decoder used in source environments.
+
 ### The mouse wheel does not browse nearby files
 
 Select an image first, then check **Settings > Navigation > Mouse wheel
@@ -81,5 +110,5 @@ your operating system. On 64-bit Windows, NaguMIX also requires the current
 Microsoft Visual C++ v14 Redistributable (x64); the startup warning provides the
 Microsoft download and `winget` options when that runtime is missing. Platform
 requirements can change, so use the
-[application README](https://github.com/nagumix/nagumix#development-setup) as
+[application README](https://github.com/nagumix/nagumix/blob/v0.5.0/README.md#development-setup) as
 the current setup reference.

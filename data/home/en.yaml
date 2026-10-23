@@ -15,9 +15,9 @@ hero:
   media:
     max_width: 480px
   actions:
-    - { label: Get started, url: docs/getting-started/, icon: fa-solid fa-arrow-right, style: primary }
+    - { label: Download for Windows, url: 'https://github.com/nagumix/nagumix/releases/download/v0.5.0/NaguMIX-0.5.0-windows-x64-setup.exe', icon: fa-solid fa-arrow-right, style: primary }
     - { label: View source, url: 'https://github.com/nagumix/nagumix', icon: fa-brands fa-github, style: ghost }
-  detail: { label: Packaged downloads are not yet available, url: docs/status/ }
+  detail: { label: 'Version 0.5.0 · unsigned Windows x64 · setup, portable ZIP and MSI', url: docs/status/ }
 
 cards:
   eyebrow: From a few images to one composition
@@ -53,8 +53,10 @@ faq:
   title: Frequently asked questions
   style: flat
   items:
+    - question: What does the name NaguMIX mean?
+      answer: "NaguMIX is a Japanese-inspired wordplay built around *nagame* (眺め, “view” or “gaze”) and *kumi* (組, “group” or “set”), combined with **MIX**. Together, the name reflects the app’s central idea: bringing a collection of pictures together into a mixed, collage-like view, allowing many images to be seen and enjoyed as a whole rather than only one at a time."
     - question: Is NaguMIX available to download?
-      answer: Packaged downloads are not yet available. The application source is public; the getting-started guide explains how to run it with Python and uv.
+      answer: Yes. NaguMIX 0.5.0 has unsigned Windows x64 setup, portable ZIP and MSI downloads. The Microsoft Visual C++ v14 x64 runtime is required. Source is also available; there are no macOS/Linux binaries or published WinGet package.
       url: docs/status/
       link_label: Check availability
     - question: Does arranging or cropping change my source images?
@@ -73,3 +75,5 @@ faq:
       answer: Saved layouts do not contain copies of the images. If a referenced file was moved, removed, changed incompatibly or can no longer be decoded, restore the expected source file and try again; the existing canvas is kept when loading fails.
       url: docs/getting-started/#troubleshooting
       link_label: Troubleshoot loading
+    - question: I don't like a certain behavior, can you please change it?
+      answer: NaguMIX is a very opinionated personal project, tailormade to provide what I want from an image-collage app. I welcome feedback and suggestions, but I cannot promise to implement them. If you want a different behavior, you are welcome to fork the source and make your own version.

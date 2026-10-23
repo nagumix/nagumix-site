@@ -15,5 +15,6 @@ Save a canvas state when you want to return to the layout. Export a still image
 when you want a finished composition to share. A saved state refers to the
 original files, so keep those files available.
 
-NaguMIX is under active development. [Availability]({{< relref "status.md" >}}) explains what
+NaguMIX 0.5.0 is available for Windows x64, with unsigned setup, portable ZIP
+and MSI options. Source is available for platform-specific setup. [Availability]({{< relref "status.md" >}}) explains what
 you can use today; [Getting Started]({{< relref "getting-started.md" >}}) walks through your first canvas.
